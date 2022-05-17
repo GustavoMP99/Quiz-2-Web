@@ -2,19 +2,19 @@ const express = require('express');
 
 const router = express.Router();
 const { generateAccesToken } = require( '../helpers/auth' );
-const Usuario = require('../models/usuario');
+const Usuario = require('../models/usuario');//get the model of the table
 
-router.get('/', async (req, res) =>{
+router.get('/', async (req, res) =>{//code to get all users
     const usuarios =  await Usuario.find();
     res.json(usuarios);
 });
 
-router.post('/create', async (req, res) =>{
+router.post('/create', async (req, res) =>{//code to create an user
     const {username, password } = req.body;
 
     const Old = await Usuario.findOne( { username } );
 
-    if (Old) {
+    if (Old) {//Cant create one if there its already one with the same username
         return res.status(409).json({
             message: "Username already exist"
         });
@@ -28,7 +28,7 @@ router.post('/create', async (req, res) =>{
     });
 });
 
-router.delete('/delete', async (req, res)=>{
+router.delete('/delete', async (req, res)=>{//function to delete a user with the id
     await Usuario.findByIdAndRemove( req.params.id );
 
     res.json({
@@ -36,7 +36,7 @@ router.delete('/delete', async (req, res)=>{
     });
 });
 
-router.post('/edit', async (req, res) =>{
+router.post('/edit', async (req, res) =>{//funtion to edit some user with the id
     const { username, password } = req.body;
     const Old = await Usuario.findOne( { username } );
 
@@ -52,7 +52,7 @@ router.post('/edit', async (req, res) =>{
     });
 });
 
-router.post('/login', async (req, res) =>{
+router.post('/login', async (req, res) =>{//Function to generate a token if the user enter the correct user and pass
     const { username, password } = req.body;
 
     const user = await Usuario.findOne( { username } );
